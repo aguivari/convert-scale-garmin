@@ -1,3 +1,6 @@
+# support functions for renpho scales
+# so timestamp and field names can be processed
+
 from datetime import datetime
 from utils import get_physique_rating
 import pandas as pd

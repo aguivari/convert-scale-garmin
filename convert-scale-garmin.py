@@ -22,6 +22,7 @@ input_file = sys.argv[2]
 output_file = sys.argv[3]
 brand=sys.argv[1]
 
+# import support function for correct brand
 if brand == "renpho":
     from brands.renpho import process_row
 elif brand == "eufy":

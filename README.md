@@ -1,11 +1,14 @@
 # convert-renpho-garmin
-Convert RENPHO Scales export CSV with body measurements to GARMIN FIT
+Convert Smart Scale export CSV with body measurements to GARMIN FIT
+
+Initially supporting RENPHO R-A002 which generates 10+ body measurements
+Adding compatibility with some Eufy scales
 
 ## Rationale
-Garmin Connect has a very strict CSV file formatting which can accept Some of the CSV exported data
-from the Renpho App.
+Garmin Connect has a very strict CSV file formatting which can accept some of the CSV exported data
+from the Smart Scale App.
 
-Specifically, this is the file formati it accepts:
+Specifically, this is the file format it accepts:
 
 ```text
 Body
@@ -13,12 +16,12 @@ Date,Weight,BMI,Fat
 2026/04/06,82.4,27.5,30.4
 ```
 
-However, only these 3 metrics are accepted, and with no time of measurement, only date.
+Only these 3 metrics are accepted, and with no time of measurement, only date.
 
 This shows correctly in Garmin Connect showing the three metrics, but with a default time of 0:00 GMT
 converterd to the local timezone of the user.
 
-This python script scans the full RENPHO export with all metrics, similar to:
+This python script scans the full Smart Scale export with all metrics, similar to:
 
 ```text
 Date, Time, Weight(kg),BMI,Body Fat(%),Skeletal Muscle(%),Fat-Free Mass(kg),Subcutaneous Fat(%),Visceral Fat,Body Water(%),Muscle Mass(kg),Bone Mass(kg),Protein (%),BMR(kcal),Metabolic Age,Optimal Weight(kg),Target to optimal weight(kg),Target to optimal fat mass(kg),Target to optimal muscle mass(kg),Body Type,Remarks
@@ -26,24 +29,30 @@ Date, Time, Weight(kg),BMI,Body Fat(%),Skeletal Muscle(%),Fat-Free Mass(kg),Subc
 ```
 And generates a valid FIT file which can be imported to Garmin Connect
 
-The code does some quick comparison of Gender (CLI parameter), body fat percentage and skeletal muscle percentage to give
-a "Physique Rating" (1 to 9) as described  [here](https://tanita.eu/understanding-your-measurements/physique-rating)
+The actual CSV format and headers/columns vary by brand
 
-the Following metrics are available to Garmin Connect after the import:
+The code does some quick comparison of Gender (CLI parameter), body fat
+percentage and skeletal muscle percentage to give a "Physique Rating"
+(1 to 9) as described 
+[here](https://tanita.eu/understanding-your-measurements/physique-rating)
+
+The Following metrics are available in Garmin Connect after importing the
+resulting FIT file:
 - weight
 - percent_fat
--	percent_hydration
--	visceral_fat_rating
+- percent_hydration
+- visceral_fat_rating
 - muscle_mass
--	bone_mass
--	metabolic_age
--	bmi
--	physique_rating
+- bone_mass
+- metabolic_age
+- bmi
+- physique_rating
 
-A compatible field for the BMR as calculated by the RENPHO scale, so I left it out.
+Some scales calculate a Basal Metabolic Rate but I could not find the
+approrriate FIT message property for it, so it was left out.
 
-Garmin Connect shows a "Caloric Intake" as not available ("--"), possibly these are 
-the same metric with different names.
+Garmin Connect shows a "Caloric Intake" as not available ("--"), possibly
+this is the same metric with different name.
 
 ## Calling the script
 
@@ -55,19 +64,14 @@ $ pip install -r requirements.txt
 ```
 
 ```bash
-$ python convert-renpho-garmin RENPHO\ Health-Username.csv metrics.fit
-FIT file written as '/Users/username/Downloads/metrics.fit'
+$ python convert-scale-garmin renpho RENPHO\ Health-Username.csv metrics.fit
+FIT file written as 'metrics.fit'
 ```
 
-The script requires 2 arguments, with a third optional:
+The script requires 3 arguments, with a fourth optional:
+- Scale type (renpho/eufy)
 - CSV source filename
 - FIT destination filename
 - Optional gender (male/female), default male
 
 The generated file can then be imported to Garmin Connect.
-
-
-
-
-
-

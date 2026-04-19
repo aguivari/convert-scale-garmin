@@ -68,6 +68,13 @@ $ python convert-scale-garmin renpho RENPHO\ Health-Username.csv metrics.fit
 FIT file written as 'metrics.fit'
 ```
 
+Existing destination file will be overwritten, for example:
+```bash
+$ python convert-scale-garmin renpho RENPHO\ Health-Username.csv metrics.fit
+file metrics.fit exists and will be overwritten!
+FIT file written as 'metrics.fit'
+```
+
 The script requires 3 arguments, with a fourth optional:
 - Scale type (renpho/eufy)
 - CSV source filename

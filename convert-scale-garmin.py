@@ -4,8 +4,6 @@ import os.path
 import sys
 from garmin_fit_sdk import Encoder, Profile
 
-print(len(sys.argv), sys.argv)
-
 if len(sys.argv) < 4: 
     print("Error: three arguments are expected, with an optional fourth (default male)")
     print("Usage: ", sys.argv[0], "<brand> <input_file.csv> <output_file.fit> [male/female]")

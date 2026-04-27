@@ -63,12 +63,26 @@ $ pip install -r requirements.txt
 (output of pip)
 ```
 
+Run the script passing the required arguments:
+
 ```bash
-$ python convert-scale-garmin renpho RENPHO\ Health-Username.csv metrics.fit
+$ python convert-scale-garmin renpho RENPHO\ Health-Username.csv metrics.fit 
+no gender specified on command line, assuming male
 FIT file written as 'metrics.fit'
 ```
 
-Existing destination file will be overwritten, for example:
+If no gender is speficied, 'male' is assumed. You can specify the gender
+so the script will adjust the `Physique Rating` to each gender's usual
+fat level range.
+
+```bash
+$ python convert-scale-garmin renpho RENPHO\ Health-Username.csv metrics.fit female
+gender specified on command line: female
+FIT file written as '/Users/adilson/Downloads/20260427-1.fit'```
+```
+
+An existing destination file will be overwritten, for example:
+
 ```bash
 $ python convert-scale-garmin renpho RENPHO\ Health-Username.csv metrics.fit
 file metrics.fit exists and will be overwritten!
@@ -93,22 +107,24 @@ The Garmin Connect login process is very sensitive, and will
 easily return Error 429. In this case, try logging in and out
 of connect.garmin.com, or waiting 30 to 60 minutes before trying
 again. Alternatively, try chaging your "public" IP address -
-using the mobild phone tether mode, for instance, but in this
-case fiest login and logout using the browser before trying the
+using the mobile phone tether mode, for instance, but in this
+case first login and logout using the browser before trying the
 script.
 
 Once authenticated, session tokens will be saved which should
 work for some days.
 
 On first use, or if credentials are deleted, it will ask for user
-and password and store in `.garmin_uploader/credentials.json`
+and password and store in `.garmin_uploader/credentials.json` and 
+set chmod 0600 on the file.
 
 Usage:
+
 ```bash
 ❯ python ~/convert-scale-garmin/uploader.py ~/20260427.fit
 Configuration file not found at /Users/username/.garmin_uploader/credentials.json
 Please enter your Garmin Connect credentials:
-Email: username@gmail.com
+Email: username@email.com
 Password: <invisible>
 Credentials saved to /Users/adilson/.garmin_uploader/credentials.json
 Logging into Garmin Connect... This may prompt for MFA if enabled...
@@ -123,7 +139,7 @@ The 429 error looks like:
 ❯ python ~/convert-scale-garmin/uploader.py ~/20260427.fit
 Configuration file not found at /Users/username/.garmin_uploader/credentials.json
 Please enter your Garmin Connect credentials:
-Email: username@gmail.com
+Email: username@email.com
 Password: <invisible>
 Credentials saved to /Users/adilson/.garmin_uploader/credentials.json
 Logging into Garmin Connect... This may prompt for MFA if enabled...
@@ -132,4 +148,15 @@ ERROR 429: Too Many Requests.
 Your IP might be temporarily rate-limited.
 Try logging in and out on connect.garmin.com in a web browser first.
 Error during execution: Error in request: 429 Client Error: Too Many Requests for url: https://sso.garmin.com/sso/signin?id=gauth-widget&embedWidget=true&gauthHost=https%3A%2F%2Fsso.garmin.com%2Fsso%2Fembed&service=https%3A%2F%2Fsso.garmin.com%2Fsso%2Fembed&source=https%3A%2F%2Fsso.garmin.com%2Fsso%2Fembed&redirectAfterAccountLoginUrl=https%3A%2F%2Fsso.garmin.com%2Fsso%2Fembed&redirectAfterAccountCreationUrl=https%3A%2F%2Fsso.garmin.com%2Fsso%2Fembed
+```
+
+Upon succesfull execution the directory structure of the .garmin_uploader will look like
+
+```bash
+❯ find ~/.garmin_uploader
+/Users/username/.garmin_uploader
+/Users/username/.garmin_uploader/credentials.json
+/Users/username/.garmin_uploader/session
+/Users/username/.garmin_uploader/session/oauth2_token.json
+/Users/username/.garmin_uploader/session/oauth1_token.json
 ```
